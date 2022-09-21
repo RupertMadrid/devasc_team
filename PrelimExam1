@@ -1,0 +1,48 @@
+from flask import Flask, jsonify,request
+#Madrid, Rupert Conrad O.
+app = Flask(__name__)
+heart_rate = [
+    {
+        "date": "1-2-2003",
+        "heart_id": "1",
+        "heart_rate": "106"
+    }
+]
+
+#INSERT
+@app.route('/heart_rate', methods=['POST'])
+def add_heart():
+    heart = request.get_json()
+    heart_rate.append(heart)
+    return {'id': len(heart_rate)},200
+
+#SHOW
+@app.route('/heart_rate', methods=['GET'])
+def get_heart():
+    return jsonify(heart_rate)
+
+#SHOW SPECIFIC
+@app.route('/heart_rate/<int:heart_id>', methods=['GET'])
+def get_heart_specify(heart_id):
+    spec_id = [spec_id for spec_id in heart_rate if spec_id['heart_id'] == heart_id]
+    return jsonify({"heart_id":spec_id})
+
+
+#UPDATE
+@app.route('/heart_rate/update', methods=['POST'])
+def update_heart(id):
+
+    return jsonify(heart_rate)
+
+#DELETE
+@app.route('/heart_rate/delete/<int:id>', methods=['DELETE'])
+def delete_heart(id):
+    heart_id = [heart_id for heart_id in heart_rate if heart_id['heart_id'] == id ]
+    heart_rate.remove(heart_id[0])
+    return jsonify(heart_rate)
+
+
+
+
+if __name__ == '__main__':  
+    app.run()
